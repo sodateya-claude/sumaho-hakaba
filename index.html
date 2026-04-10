@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>あなたのスマホ墓場</title>
+<meta property="og:title" content="あなたのスマホ墓場">
+<meta property="og:description" content="あなたがスマホに捧げた時間、別の人生に換算したら？">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: Georgia, 'Times New Roman', serif;
+  background: #ffffff;
+  color: #111111;
+  min-height: 100dvh;
+  display: flex;
+  justify-content: center;
+}
+.container {
+  width: 100%;
+  max-width: 400px;
+  padding: 40px 20px 60px;
+}
+h1 {
+  font-size: 1.3rem;
+  font-weight: normal;
+  letter-spacing: 0.03em;
+  margin-bottom: 12px;
+}
+.subcopy {
+  font-size: 0.88rem;
+  line-height: 1.7;
+  margin-bottom: 40px;
+}
+.label {
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  margin-bottom: 12px;
+}
+
+/* 入力コントロール */
+.input-group {
+  margin-bottom: 32px;
+}
+.input-row {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+.num-input {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 1.8rem;
+  width: 100%;
+  border: none;
+  border-bottom: 1.5px solid #111;
+  border-radius: 0;
+  outline: none;
+  padding: 8px 0;
+  background: transparent;
+  color: #111;
+}
+.unit {
+  font-size: 1rem;
+  white-space: nowrap;
+}
+
+/* スライダー */
+.slider-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 2px;
+  background: #ccc;
+  outline: none;
+}
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  background: #111;
+  border-radius: 0;
+  cursor: pointer;
+}
+.slider::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  background: #111;
+  border: none;
+  border-radius: 0;
+  cursor: pointer;
+}
+.slider-val {
+  font-size: 1.4rem;
+  min-width: 3.5em;
+  text-align: right;
+}
+
+/* スマホ開始年齢 */
+.age-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.age-btn {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 0.85rem;
+  padding: 10px 14px;
+  background: #fff;
+  color: #111;
+  border: 1.5px solid #111;
+  border-radius: 0;
+  cursor: pointer;
+}
+.age-btn:hover { background: #fff; }
+.age-btn.selected { background: #111; color: #fff; }
+
+.go-btn {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 0.95rem;
+  padding: 14px 32px;
+  background: #fff;
+  color: #111;
+  border: 1.5px solid #111;
+  border-radius: 0;
+  cursor: pointer;
+  display: block;
+  width: 100%;
+  margin-top: 8px;
+}
+.go-btn:hover { background: #fff; }
+.error-msg {
+  font-size: 0.8rem;
+  text-align: center;
+  margin-top: 10px;
+  min-height: 1.2em;
+}
+
+/* 結果画面 */
+.result-hero {
+  margin-bottom: 32px;
+}
+.result-label {
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  margin-bottom: 8px;
+}
+.result-number {
+  font-size: 3rem;
+  font-weight: normal;
+  letter-spacing: -0.02em;
+  margin-bottom: 4px;
+}
+.result-sub {
+  font-size: 0.88rem;
+  line-height: 1.7;
+}
+.result-divider {
+  border: none;
+  border-top: 1px solid #111;
+  margin: 28px 0;
+}
+.alt-title {
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  margin-bottom: 16px;
+}
+.alt-item {
+  font-size: 0.88rem;
+  line-height: 1.8;
+  margin-bottom: 16px;
+  padding-left: 1.2em;
+  text-indent: -1.2em;
+}
+.alt-item::before { content: '- '; }
+
+.type-section {
+  margin-top: 28px;
+}
+.type-label {
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  margin-bottom: 8px;
+}
+.type-name {
+  font-size: 1.2rem;
+  margin-bottom: 8px;
+}
+.type-desc {
+  font-size: 0.85rem;
+  line-height: 1.7;
+}
+
+.share-btn {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 0.95rem;
+  padding: 14px 32px;
+  background: #111;
+  color: #fff;
+  border: 1.5px solid #111;
+  border-radius: 0;
+  cursor: pointer;
+  display: block;
+  width: 100%;
+  text-decoration: none;
+  text-align: center;
+  margin-top: 36px;
+}
+.share-btn:hover { background: #111; }
+.retry-btn {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 0.9rem;
+  padding: 12px 32px;
+  background: #fff;
+  color: #111;
+  border: 1.5px solid #111;
+  border-radius: 0;
+  cursor: pointer;
+  display: block;
+  width: 100%;
+  margin-top: 10px;
+}
+.retry-btn:hover { background: #fff; }
+.credit {
+  font-size: 0.7rem;
+  text-align: center;
+  margin-top: 32px;
+  opacity: 0.5;
+}
+.hidden { display: none; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- 入力画面 -->
+  <div id="inputScreen">
+    <h1>あなたのスマホ墓場</h1>
+    <p class="subcopy">
+      あなたがスマホに捧げた時間、<br>
+      別の人生に換算したら？
+    </p>
+
+    <div class="input-group">
+      <div class="label">YOUR AGE</div>
+      <div class="input-row">
+        <input type="text" class="num-input" id="ageInput" placeholder="25" inputmode="numeric">
+        <span class="unit">歳</span>
+      </div>
+    </div>
+
+    <div class="input-group">
+      <div class="label">DAILY SCREEN TIME</div>
+      <div class="slider-row">
+        <input type="range" class="slider" id="timeSlider" min="1" max="16" value="5" step="0.5">
+        <span class="slider-val" id="timeVal">5.0h</span>
+      </div>
+    </div>
+
+    <div class="input-group">
+      <div class="label">FIRST SMARTPHONE</div>
+      <div class="age-options" id="startOptions"></div>
+    </div>
+
+    <button class="go-btn" id="goBtn" onclick="showResult()">墓を暴く</button>
+    <div class="error-msg" id="errorMsg"></div>
+  </div>
+
+  <!-- 結果画面 -->
+  <div id="resultScreen" class="hidden">
+    <div class="result-hero">
+      <div class="result-label">TOTAL TIME BURIED</div>
+      <div class="result-number" id="totalTime"></div>
+      <div class="result-sub" id="totalDays"></div>
+    </div>
+
+    <hr class="result-divider">
+
+    <div class="alt-title">ANOTHER LIFE</div>
+    <div id="altLives"></div>
+
+    <div class="type-section">
+      <hr class="result-divider">
+      <div class="type-label">YOUR TYPE</div>
+      <div class="type-name" id="typeName"></div>
+      <div class="type-desc" id="typeDesc"></div>
+    </div>
+
+    <a class="share-btn" id="shareBtn" target="_blank" rel="noopener">X でシェア</a>
+    <button class="retry-btn" onclick="location.reload()">もう一度診断する</button>
+    <div class="credit">@claude_sodateya</div>
+  </div>
+
+</div>
+
+<script>
+// スライダー
+var slider = document.getElementById('timeSlider');
+var timeVal = document.getElementById('timeVal');
+slider.addEventListener('input', function() {
+  timeVal.textContent = parseFloat(slider.value).toFixed(1) + 'h';
+});
+
+// スマホ開始年齢の選択肢
+var startAges = [
+  { label: '小学生 (10歳)', value: 10 },
+  { label: '中学生 (13歳)', value: 13 },
+  { label: '高校生 (16歳)', value: 16 },
+  { label: '大学生 (18歳)', value: 18 },
+  { label: '社会人 (22歳)', value: 22 }
+];
+var selectedStart = null;
+var startEl = document.getElementById('startOptions');
+startAges.forEach(function(s) {
+  var btn = document.createElement('button');
+  btn.className = 'age-btn';
+  btn.textContent = s.label;
+  btn.onclick = function() {
+    selectedStart = s.value;
+    document.querySelectorAll('.age-btn').forEach(function(b) { b.classList.remove('selected'); });
+    btn.classList.add('selected');
+  };
+  startEl.appendChild(btn);
+});
+
+// 別の人生の換算データ
+var altLives = [
+  { hours: 1,     text: '小説を{n}冊読める時間' },
+  { hours: 2000,  text: '新しい言語を{n}個マスターできる時間', unit: 2000 },
+  { hours: 500,   text: '世界一周を{n}回できる時間', unit: 500 },
+  { hours: 100,   text: 'フルマラソンを{n}回完走できる練習時間', unit: 100 },
+  { hours: 10000, text: 'プロレベルの楽器演奏者に{n}回なれる時間', unit: 10000 },
+  { hours: 40,    text: '資格を{n}個取れる勉強時間', unit: 40 },
+  { hours: 2,     text: '映画を{n}本観られる時間', unit: 2 }
+];
+
+// スマホ依存タイプ
+var types = [
+  {
+    minH: 0, maxH: 3,
+    name: '健全なデジタル市民',
+    desc: 'スマホとの距離感が適切です。あなたの人生の主導権は、あなたが握っています。'
+  },
+  {
+    minH: 3, maxH: 5,
+    name: 'ちょいスマホ民',
+    desc: '平均よりちょっと多め。電車の中でなんとなく開く癖、心当たりありませんか？'
+  },
+  {
+    minH: 5, maxH: 7,
+    name: '通知の奴隷',
+    desc: '通知が鳴るたびに反応していませんか。あなたの1日の相当な部分が、スマホの中で消えています。'
+  },
+  {
+    minH: 7, maxH: 9,
+    name: '深夜の虚無スクロラー',
+    desc: '寝る前の「あと5分だけ」が気づけば2時間。目の下のクマ、スマホのせいかもしれません。'
+  },
+  {
+    minH: 9, maxH: 12,
+    name: 'トイレの哲学者',
+    desc: 'トイレでもお風呂でも食事中でもスマホが手放せない。あなたとスマホの間に、もはや境界線はありません。'
+  },
+  {
+    minH: 12, maxH: Infinity,
+    name: 'スマホと融合した者',
+    desc: '起きている時間のほぼ全てをスマホに捧げています。あなたはもうスマホの一部です。もしくはスマホがあなたの一部です。'
+  }
+];
+
+function showResult() {
+  var errorEl = document.getElementById('errorMsg');
+  errorEl.textContent = '';
+
+  var ageRaw = document.getElementById('ageInput').value.replace(/[^\d]/g, '');
+  if (ageRaw === '') {
+    errorEl.textContent = '年齢を入力してください';
+    return;
+  }
+  var age = parseInt(ageRaw, 10);
+  if (age < 6 || age > 120) {
+    errorEl.textContent = '6〜120歳で入力してください';
+    return;
+  }
+  if (selectedStart === null) {
+    errorEl.textContent = 'スマホを持ち始めた時期を選んでください';
+    return;
+  }
+  if (selectedStart > age) {
+    errorEl.textContent = '年齢よりスマホ開始年齢が大きいです';
+    return;
+  }
+
+  var dailyH = parseFloat(slider.value);
+  var years = age - selectedStart;
+  var totalH = Math.round(dailyH * 365 * years);
+  var totalDays = Math.round(totalH / 24);
+
+  // 表示
+  document.getElementById('inputScreen').classList.add('hidden');
+  document.getElementById('resultScreen').classList.remove('hidden');
+
+  document.getElementById('totalTime').textContent = totalH.toLocaleString() + '時間';
+  document.getElementById('totalDays').textContent = 'およそ ' + totalDays.toLocaleString() + '日分。' + years + '年間のスマホ人生。';
+
+  // 別の人生
+  var altEl = document.getElementById('altLives');
+  altEl.innerHTML = '';
+  var altTexts = [];
+
+  // 小説（1冊5時間で計算）
+  var novels = Math.round(totalH / 5);
+  var t1 = '小説を' + novels.toLocaleString() + '冊読める時間';
+  altTexts.push(t1);
+
+  // 言語マスター（2000時間で1言語）
+  var langs = Math.floor(totalH / 2000);
+  if (langs >= 1) {
+    var t2 = '新しい言語を' + langs + '個マスターできる時間';
+    altTexts.push(t2);
+  }
+
+  // 世界一周（30日=720時間として）
+  var trips = Math.floor(totalH / 720);
+  if (trips >= 1) {
+    var t3 = '世界一周を' + trips + '回できる時間';
+    altTexts.push(t3);
+  }
+
+  // プロレベル（1万時間の法則）
+  var pro = (totalH / 10000).toFixed(1);
+  var t4 = 'ピアノをプロ級にするのに必要な1万時間の' + pro + '倍';
+  altTexts.push(t4);
+
+  // 映画（1本2時間）
+  var movies = Math.round(totalH / 2);
+  var t5 = '映画を' + movies.toLocaleString() + '本観られる時間';
+  altTexts.push(t5);
+
+  altTexts.forEach(function(text) {
+    var div = document.createElement('div');
+    div.className = 'alt-item';
+    div.textContent = text;
+    altEl.appendChild(div);
+  });
+
+  // タイプ判定
+  var type = types[types.length - 1];
+  for (var i = 0; i < types.length; i++) {
+    if (dailyH < types[i].maxH) {
+      type = types[i];
+      break;
+    }
+  }
+  document.getElementById('typeName').textContent = type.name;
+  document.getElementById('typeDesc').textContent = type.desc;
+
+  // シェアテキスト
+  var shareText = 'あなたのスマホ墓場（@claude_sodateya）\n\n'
+    + '私はスマホに人生の「' + totalH.toLocaleString() + '時間」を捧げました。\n'
+    + altTexts[0] + '。\n'
+    + '依存タイプ：' + type.name + '\n\n'
+    + 'https://sodateya-claude.github.io/sumaho-hakaba/';
+  document.getElementById('shareBtn').href =
+    'https://x.com/intent/tweet?text=' + encodeURIComponent(shareText);
+}
+</script>
+</body>
+</html>
