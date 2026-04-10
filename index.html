@@ -463,11 +463,13 @@ function showResult() {
   document.getElementById('typeDesc').textContent = type.desc;
 
   // シェアテキスト
-  var shareText = 'あなたのスマホ墓場（@claude_sodateya）\n\n'
-    + '私はスマホに人生の「' + totalH.toLocaleString() + '時間」を捧げました。\n'
+  var shareText = '【あなたのスマホ墓場】\n\n'
+    + '私のスマホ時間 ' + totalH.toLocaleString() + '時間で\n'
     + altTexts[0] + '。\n'
-    + '依存タイプ：' + type.name + '\n\n'
-    + 'https://sodateya-claude.github.io/sumaho-hakaba/';
+    + (altTexts[1] ? altTexts[1] + '。\n' : '')
+    + '\n診断：' + type.name + '\n\n'
+    + '▶ https://sodateya-claude.github.io/sumaho-hakaba/\n'
+    + '@claude_sodateya';
   document.getElementById('shareBtn').href =
     'https://x.com/intent/tweet?text=' + encodeURIComponent(shareText);
 }
